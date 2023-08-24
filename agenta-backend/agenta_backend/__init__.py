@@ -9,26 +9,20 @@ from supertokens_python.recipe import (
     session,
     dashboard,
 )
-from supertokens_python.recipe.thirdparty.provider import Provider
 from supertokens_python.recipe.passwordless import ContactEmailOnlyConfig
 from supertokens_python.recipe.passwordless.interfaces import (
     APIOptions as PAPIOptions,
 )
 from supertokens_python.recipe.thirdpartypasswordless.interfaces import (
     APIInterface as ThirdpartyPasswordlessAPIInterface,
-    ThirdPartySignInUpPostOkResult,
     ConsumeCodePostOkResult,
+    ThirdPartySignInUpPostOkResult,
 )
 from supertokens_python.recipe.thirdparty import interfaces as ThirdPartyInterfaces
 from supertokens_python.recipe.thirdparty.provider import Provider, RedirectUriInfo
 import os
 from typing import Any, Dict, Union
-from agenta_backend.models.api.user_models import User
-from agenta_backend.models.api.organization_models import Organization
-from agenta_backend.services.user_service import create_new_user
-from agenta_backend.services.organization_service import (
-    create_new_organization,
-)
+from agenta_backend.services.commoners import create_accounts
 from typing import Optional
 
 
@@ -40,7 +34,6 @@ def override_thirdpartypasswordless_apis(
 ):
     original_consume_code_post = original_implementation.consume_code_post
     original_thirdparty_sign_in_up = original_implementation.thirdparty_sign_in_up_post
-    print("override")
 
     async def consume_code_post(
         pre_auth_session_id: str,
@@ -64,20 +57,11 @@ def override_thirdpartypasswordless_apis(
 
         # Post sign up response, we check if it was successful
         if isinstance(response, ConsumeCodePostOkResult):
-            user_dict = {
-                "id": response.user.user_id,
-                "email": response.user.email,
-                "username": response.user.email.split("@")[0],
+            payload = {
+                "user_id": response.user.user_id,
+                "user_email": response.user.email,
             }
-            organization = Organization(**{"name": user_dict["username"]})
-
-            if response.created_new_user:
-                print("================ SIGNUP ====================")
-                org = await create_new_organization(organization)
-
-                user_dict["organization_id"] = str(org.inserted_id)
-                user = User(**user_dict)
-                await create_new_user(user)
+            await create_accounts(payload)
 
         return response
 
@@ -89,7 +73,6 @@ def override_thirdpartypasswordless_apis(
         api_options: PAPIOptions,
         user_context: Dict[str, Any],
     ) -> ThirdPartySignInUpPostOkResult:
-        print("Calling ")
         # First we call the original implementation of consume_code_post.
         response = await original_thirdparty_sign_in_up(
             provider,
@@ -100,30 +83,12 @@ def override_thirdpartypasswordless_apis(
             user_context,
         )
 
-        print("Response ====> ", response)
-        print("User Response =====> ", response.user)
-        print("Created User ====> ", response.created_new_user)
-
         if isinstance(response, ThirdPartySignInUpPostOkResult):
-            # user object contains the ID and email of the user
-            user = response.user
-
-            user_dict = {
-                "id": response.user.user_id,
-                "email": response.user.email,
-                "username": response.user.email.split("@")[0],
+            payload = {
+                "user_id": response.user.user_id,
+                "user_email": response.user.email,
             }
-            print(user_dict)
-            organization = Organization(**{"name": user_dict["username"]})
-            print(organization)
-
-            if response.created_new_user:
-                print("================ SIGNUP ====================")
-                org = await create_new_organization(organization)
-
-                user_dict["organization_id"] = str(org.inserted_id)
-                user = User(**user_dict)
-                await create_new_user(user)
+            await create_accounts(payload)
 
         return response
 

@@ -18,7 +18,7 @@ import Logo from "../Logo/Logo"
 import Link from "next/link"
 import {ISession} from "@/lib/Types"
 import {useAppTheme} from "../Layout/ThemeContextProvider"
-import {signOut} from "supertokens-auth-react/recipe/passwordless"
+import {signOut} from "supertokens-auth-react/recipe/thirdpartypasswordless"
 import {useSessionContext} from "supertokens-auth-react/recipe/session"
 
 const {Sider} = Layout
