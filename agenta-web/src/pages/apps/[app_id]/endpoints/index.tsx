@@ -2,16 +2,16 @@ import cURLCode from "@/code_snippets/endpoints/curl"
 import pythonCode from "@/code_snippets/endpoints/python"
 import tsCode from "@/code_snippets/endpoints/typescript"
 import DynamicCodeBlock from "@/components/DynamicCodeBlock/DynamicCodeBlock"
-import { Environment, GenericObject, Parameter, Variant } from "@/lib/Types"
-import { useVariant } from "@/lib/hooks/useVariant"
-import { fetchEnvironments, fetchVariants, getAppContainerURL } from "@/lib/services/api"
-import { ApiOutlined, DownOutlined } from "@ant-design/icons"
-import { Alert, Button, Dropdown, Space, Typography } from "antd"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { createUseStyles } from "react-jss"
+import {Environment, GenericObject, Parameter, Variant} from "@/lib/Types"
+import {useVariant} from "@/lib/hooks/useVariant"
+import {fetchEnvironments, fetchVariants, getAppContainerURL} from "@/lib/services/api"
+import {ApiOutlined, DownOutlined} from "@ant-design/icons"
+import {Alert, Button, Dropdown, Space, Typography} from "antd"
+import {useRouter} from "next/router"
+import {useEffect, useState} from "react"
+import {createUseStyles} from "react-jss"
 
-const { Text, Title } = Typography
+const {Text, Title} = Typography
 
 const useStyles = createUseStyles({
     container: {
@@ -50,7 +50,7 @@ export default function VariantEndpoint() {
         loadEnvironments()
     }, [appId])
 
-    const handleEnvironmentClick = ({ key }: { key: string }) => {
+    const handleEnvironmentClick = ({key}: {key: string}) => {
         const chosenEnvironment = environments.find((env) => env.name === key)
         if (!chosenEnvironment) return
         setSelectedEnvironment(chosenEnvironment)
@@ -96,7 +96,7 @@ export default function VariantEndpoint() {
         }
     }, [variants, appId])
 
-    const { inputParams, optParams, isLoading, isError, error } = useVariant(appId, variant!)
+    const {inputParams, optParams, isLoading, isError, error} = useVariant(appId, variant!)
     const createParams = (
         inputParams: Parameter[] | null,
         environmentName: string,
@@ -157,7 +157,7 @@ export default function VariantEndpoint() {
                 <Text>Environment: </Text>
                 <Dropdown
                     menu={{
-                        items: environments.map((env) => ({ label: env.name, key: env.name })),
+                        items: environments.map((env) => ({label: env.name, key: env.name})),
                         onClick: handleEnvironmentClick,
                     }}
                 >

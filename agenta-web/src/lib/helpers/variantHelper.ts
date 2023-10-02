@@ -1,6 +1,6 @@
-import { Variant, Parameter, InputParameter } from "@/lib/Types"
-import { getVariantParametersFromOpenAPI } from "@/lib/services/api"
-import { globalErrorHandler } from "./errorHandler"
+import {Variant, Parameter, InputParameter} from "@/lib/Types"
+import {getVariantParametersFromOpenAPI} from "@/lib/services/api"
+import {globalErrorHandler} from "./errorHandler"
 
 const inputParamsToParameters = (additionalInputs: InputParameter[]): Parameter[] => {
     return additionalInputs.map((value) => ({
@@ -49,7 +49,7 @@ export const getAllVariantParameters = async (appId: string, variant: Variant) =
     let parameters: Parameter[] = []
     let inputs: Parameter[] = []
     try {
-        const { initOptParams, inputParams } = await getVariantParametersFromOpenAPI(
+        const {initOptParams, inputParams} = await getVariantParametersFromOpenAPI(
             appId,
             variant.variantId,
             variant.baseId,
@@ -58,7 +58,7 @@ export const getAllVariantParameters = async (appId: string, variant: Variant) =
         if (variant.parameters) {
             const updatedInitOptParams = initOptParams.map((param) => {
                 return variant.parameters && variant.parameters.hasOwnProperty(param.name)
-                    ? { ...param, default: variant.parameters[param.name] }
+                    ? {...param, default: variant.parameters[param.name]}
                     : param
             })
             parameters = [...updatedInitOptParams]
@@ -67,7 +67,7 @@ export const getAllVariantParameters = async (appId: string, variant: Variant) =
         }
         inputs = updateInputParams(parameters, inputParams)
         const URIPath = `${appId}/${variant.baseId}`
-        return { parameters, inputs, URIPath }
+        return {parameters, inputs, URIPath}
     } catch (err: any) {
         const errorResponse: any = err.response.request
         const apiCallURL: string = err.response.request.responseURL
@@ -81,6 +81,6 @@ export const getAllVariantParameters = async (appId: string, variant: Variant) =
 }
 
 export const getVariantInputParameters = async (appId: string, variant: Variant) => {
-    const { parameters, inputs } = await getAllVariantParameters(appId, variant)
+    const {parameters, inputs} = await getAllVariantParameters(appId, variant)
     return updateInputParams(parameters, inputs || []) || inputs
 }

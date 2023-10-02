@@ -1,12 +1,12 @@
-import { Environment, Variant } from "@/lib/Types"
-import { fetchEnvironments, publishVariant } from "@/lib/services/api"
-import { Button, Checkbox, Modal, Space, Typography, message } from "antd"
-import type { CheckboxChangeEvent } from "antd/es/checkbox"
-import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
-import { createUseStyles } from "react-jss"
+import {Environment, Variant} from "@/lib/Types"
+import {fetchEnvironments, publishVariant} from "@/lib/services/api"
+import {Button, Checkbox, Modal, Space, Typography, message} from "antd"
+import type {CheckboxChangeEvent} from "antd/es/checkbox"
+import {useRouter} from "next/router"
+import React, {useEffect, useState} from "react"
+import {createUseStyles} from "react-jss"
 
-const { Text } = Typography
+const {Text} = Typography
 
 const useStyles = createUseStyles({
     buttonContainer: {
@@ -114,7 +114,7 @@ const PublishVariantModal: React.FC<Props> = ({
             footer={null}
             centered
         >
-            <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+            <Space direction="vertical" size="middle" style={{display: "flex"}}>
                 <Text>
                     Select the environments where you would like to publish this variant.
                     <br />
