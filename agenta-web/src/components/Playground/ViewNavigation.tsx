@@ -1,15 +1,15 @@
 import React from "react"
-import {Col, Row, Divider, Button, Tooltip, Spin, notification} from "antd"
+import { Col, Row, Divider, Button, Tooltip, Spin, notification } from "antd"
 import TestView from "./Views/TestView"
 import ParametersView from "./Views/ParametersView"
-import {useVariant} from "@/lib/hooks/useVariant"
-import {Environment, Variant} from "@/lib/Types"
-import {useRouter} from "next/router"
-import {useState} from "react"
+import { useVariant } from "@/lib/hooks/useVariant"
+import { Environment, Variant } from "@/lib/Types"
+import { useRouter } from "next/router"
+import { useState } from "react"
 import axios from "axios"
-import {createUseStyles} from "react-jss"
-import {getAppContainerURL, restartAppVariantContainer, waitForAppToStart} from "@/lib/services/api"
-import {useAppContext} from "@/contexts/app.context"
+import { createUseStyles } from "react-jss"
+import { getAppContainerURL, restartAppVariantContainer, waitForAppToStart } from "@/lib/services/api"
+import { useAppContext } from "@/contexts/app.context"
 
 interface Props {
     variant: Variant
@@ -54,7 +54,7 @@ const ViewNavigation: React.FC<Props> = ({
     const [isParamsCollapsed, setIsParamsCollapsed] = useState("1")
     const [containerURIPath, setContainerURIPath] = useState("")
     const [restarting, setRestarting] = useState<boolean>(false)
-    const {currentApp} = useAppContext()
+    const { currentApp } = useAppContext()
 
     let prevKey = ""
     const showNotification = (config: Parameters<typeof notification.open>[0]) => {
@@ -177,7 +177,7 @@ const ViewNavigation: React.FC<Props> = ({
 
     return (
         <Spin spinning={isLoading}>
-            <Row gutter={[{xs: 8, sm: 16, md: 24, lg: 32}, 20]}>
+            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]}>
                 <Col span={24}>
                     <ParametersView
                         variant={variant}
@@ -197,7 +197,7 @@ const ViewNavigation: React.FC<Props> = ({
             </Row>
             <Divider />
 
-            <Row gutter={[{xs: 8, sm: 16, md: 24, lg: 32}, 20]} className={classes.row}>
+            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]} className={classes.row}>
                 <Col span={24}>
                     <TestView inputParams={inputParams} optParams={optParams} URIPath={URIPath} />
                 </Col>

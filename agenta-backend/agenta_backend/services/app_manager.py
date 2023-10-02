@@ -15,6 +15,7 @@ from agenta_backend.models.db_models import (
     EnvironmentDB,
 )
 from agenta_backend.services import db_manager, docker_utils
+from agenta_backend.services.db_manager import app_variant_db_to_pydantic
 from docker.errors import DockerException
 
 logger = logging.getLogger(__name__)
@@ -97,12 +98,15 @@ async def update_variant_image(
     """
     if image.tags in ["", None]:
         msg = "Image tags cannot be empty"
+        print(f"Step 3a: {msg}")
         logger.error(msg)
         raise ValueError(msg)
+
     if not image.tags.startswith(settings.registry):
         raise ValueError(
             "Image should have a tag starting with the registry name (agenta-server)"
         )
+
     if image not in docker_utils.list_images():
         raise DockerException(
             f"Image {image.docker_id} with tags {image.tags} not found"

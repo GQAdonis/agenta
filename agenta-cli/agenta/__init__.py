@@ -1,13 +1,16 @@
-from . import sdk
-from . import config
-from .sdk import post, ingest, app
+from .sdk.agenta_decorator import app, entrypoint
+from .sdk.context import get_contexts, save_context
 from .sdk.types import (
-    TextParam,
-    FloatParam,
-    IntParam,
-    InFile,
     Context,
-    MultipleChoiceParam,
     DictInput,
+    FloatParam,
+    InFile,
+    IntParam,
+    MultipleChoiceParam,
+    TextParam,
 )
-from .sdk.context import save_context, get_contexts
+from .sdk.utils.preinit import PreInitObject
+from .sdk.agenta_init import Config, AgentaSetup, init
+
+config = PreInitObject("agenta.config", Config)
+setup = PreInitObject("agenta.setup", AgentaSetup)

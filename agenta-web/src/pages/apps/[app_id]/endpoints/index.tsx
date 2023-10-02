@@ -2,16 +2,16 @@ import cURLCode from "@/code_snippets/endpoints/curl"
 import pythonCode from "@/code_snippets/endpoints/python"
 import tsCode from "@/code_snippets/endpoints/typescript"
 import DynamicCodeBlock from "@/components/DynamicCodeBlock/DynamicCodeBlock"
-import {Environment, GenericObject, Parameter, Variant} from "@/lib/Types"
-import {useVariant} from "@/lib/hooks/useVariant"
-import {fetchEnvironments, fetchVariants, getAppContainerURL} from "@/lib/services/api"
-import {ApiOutlined, DownOutlined} from "@ant-design/icons"
-import {Alert, Button, Dropdown, Space, Typography} from "antd"
-import {useRouter} from "next/router"
-import {useEffect, useState} from "react"
-import {createUseStyles} from "react-jss"
+import { Environment, GenericObject, Parameter, Variant } from "@/lib/Types"
+import { useVariant } from "@/lib/hooks/useVariant"
+import { fetchEnvironments, fetchVariants, getAppContainerURL } from "@/lib/services/api"
+import { ApiOutlined, DownOutlined } from "@ant-design/icons"
+import { Alert, Button, Dropdown, Space, Typography } from "antd"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { createUseStyles } from "react-jss"
 
-const {Text, Title} = Typography
+const { Text, Title } = Typography
 
 const useStyles = createUseStyles({
     container: {
@@ -31,7 +31,7 @@ export default function VariantEndpoint() {
     const loadURL = async (environment: Environment) => {
         if (environment.deployed_app_variant_id) {
             const url = await getAppContainerURL(appId, environment.deployed_app_variant_id)
-            setURI(`${process.env.NEXT_PUBLIC_AGENTA_API_URL}${url}/generate`)
+            setURI(`${process.env.NEXT_PUBLIC_AGENTA_API_URL}${url}/generate_deployed`)
         }
     }
 
@@ -50,7 +50,7 @@ export default function VariantEndpoint() {
         loadEnvironments()
     }, [appId])
 
-    const handleEnvironmentClick = ({key}: {key: string}) => {
+    const handleEnvironmentClick = ({ key }: { key: string }) => {
         const chosenEnvironment = environments.find((env) => env.name === key)
         if (!chosenEnvironment) return
         setSelectedEnvironment(chosenEnvironment)
@@ -96,10 +96,10 @@ export default function VariantEndpoint() {
         }
     }, [variants, appId])
 
-    const {inputParams, optParams, isLoading, isError, error} = useVariant(appId, variant!)
+    const { inputParams, optParams, isLoading, isError, error } = useVariant(appId, variant!)
     const createParams = (
         inputParams: Parameter[] | null,
-        optParams: Parameter[] | null,
+        environmentName: string,
         value: string | number,
     ) => {
         let mainParams: GenericObject = {}
@@ -116,11 +116,7 @@ export default function VariantEndpoint() {
             mainParams["inputs"] = secondaryParams
         }
 
-        optParams
-            ?.filter((item) => item.type !== "object")
-            .forEach((item) => {
-                mainParams[item.name] = item.default
-            })
+        mainParams["environment"] = environmentName
 
         return JSON.stringify(mainParams, null, 2)
     }
@@ -141,7 +137,7 @@ export default function VariantEndpoint() {
         return <div>{error?.message || "Error loading variant"}</div>
     }
 
-    const params = createParams(inputParams, optParams, "add_a_value")
+    const params = createParams(inputParams, selectedEnvironment?.name || "none", "add_a_value")
     const codeSnippets: Record<string, string> = {
         Python: pythonCode(uri!, params),
         cURL: cURLCode(uri!, params),
@@ -161,7 +157,7 @@ export default function VariantEndpoint() {
                 <Text>Environment: </Text>
                 <Dropdown
                     menu={{
-                        items: environments.map((env) => ({label: env.name, key: env.name})),
+                        items: environments.map((env) => ({ label: env.name, key: env.name })),
                         onClick: handleEnvironmentClick,
                     }}
                 >
