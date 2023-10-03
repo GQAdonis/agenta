@@ -15,7 +15,6 @@ from agenta_backend.models.db_models import (
     EnvironmentDB,
 )
 from agenta_backend.services import db_manager, docker_utils
-from agenta_backend.services.db_manager import app_variant_db_to_pydantic
 from docker.errors import DockerException
 
 logger = logging.getLogger(__name__)
