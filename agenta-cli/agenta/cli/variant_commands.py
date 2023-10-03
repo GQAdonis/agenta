@@ -131,7 +131,9 @@ def add_variant(
             variant_id = config["variant_ids"][config["variants"].index(variant_name)]
             client.update_variant_image(variant_id, image, host)
         else:
-            click.echo(click.style(f"Adding {variant_name} to server...", fg="bright_black"))
+            click.echo(
+                click.style(f"Adding {variant_name} to server...", fg="bright_black")
+            )
             response = client.add_variant_to_server(app_id, base_name, image, host)
             variant_id = response["variant_id"]
             config["variants"].append(variant_name)
