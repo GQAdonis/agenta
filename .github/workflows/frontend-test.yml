@@ -1,6 +1,7 @@
 name: Execute Frontend tests
 
-on: push
+on:
+    workflow_dispatch:
 
 jobs:
   cypress:
