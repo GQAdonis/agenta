@@ -21,7 +21,7 @@ jobs:
 
       - name: Cypress run
         env:
-            OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
+            CYPRESS_OPEN_AI_KEY: ${{ secrets.CYPRESS_OPEN_AI_KEY }}
         uses: cypress-io/github-action@v6
         with:
           config-file: ${{ github.workspace }}/agenta-web/cypress.config.ts
