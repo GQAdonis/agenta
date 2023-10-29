@@ -4,6 +4,7 @@ on: push
 
 jobs:
   cypress:
+    environment: oss
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -18,6 +19,8 @@ jobs:
           npm install
 
       - name: Cypress run
+        env:
+            OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
         uses: cypress-io/github-action@v6
         with:
           config-file: ${{ github.workspace }}/agenta-web/cypress.config.ts
